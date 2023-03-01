@@ -1,4 +1,4 @@
-package com.example.UrlShortener.User;
+package com.example.UrlShortener.Account;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,29 +21,22 @@ import java.util.Objects;
 public class Account implements UserDetails {
 
     @Id
-    @SequenceGenerator(
-            name = "id-sequence-account",
-            sequenceName = "id-sequence-account"
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "id-sequence-account"
-    )
-    private Integer id;
     private String email;
+    private String password;
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    public Account(String email, Integer id){
+    public Account(String email,String password){
         this.email = email;
-        this.id = id;
+        this.password = password;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
+        return "Account{" +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
                 '}';
     }
 
@@ -52,12 +45,12 @@ public class Account implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account user = (Account) o;
-        return id == user.id && Objects.equals(email, user.email);
+        return  Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email);
+        return Objects.hash(email);
     }
 
     @Override
@@ -67,11 +60,11 @@ public class Account implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
-    public String getUsername() {
+    public String getUsername () {
         return email;
     }
 

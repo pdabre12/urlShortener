@@ -1,4 +1,4 @@
-package com.example.UrlShortener.User;
+package com.example.UrlShortener.Account;
 
 public enum Role {
     USER,
