@@ -1,12 +1,19 @@
 package com.example.UrlShortener.Url;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 @Service
 public class UrlGenerator {
+
+    @Autowired
+    private UrlService urlService;
+
+
     private static int SHORT_URL_CHAR_SIZE=7;
     public static String convert(String longURL) {
         try {
@@ -24,16 +31,20 @@ public class UrlGenerator {
             throw new RuntimeException(e);
         }
     }
-    public static String generateRandomShortUrl(String longURL) {
+    public String generateRandomShortUrl(String longURL) {
         String hash=UrlGenerator.convert(longURL);
         int numberOfCharsInHash=hash.length();
         int counter=0;
         while(counter < numberOfCharsInHash-SHORT_URL_CHAR_SIZE){
-//            if(!DB.exists(hash.substring(counter, counter+SHORT_URL_CHAR_SIZE))){
-//            if (!hash.substring(counter, counter+SHORT_URL_CHAR_SIZE).equals("c9f31d8")){
-            if (1==1){
-            return "http://urlshortener.com/" + hash.substring(counter, counter+SHORT_URL_CHAR_SIZE);
+            Optional<Url> url = urlService
+                    .getShortenedUrl
+                            (hash.substring(counter, counter+SHORT_URL_CHAR_SIZE));
 
+            if(!url.isPresent()){
+                {
+                    return hash.substring(counter, counter+SHORT_URL_CHAR_SIZE);
+
+                }
             }
             counter++;
         }
