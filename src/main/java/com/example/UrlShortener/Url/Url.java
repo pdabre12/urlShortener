@@ -17,6 +17,8 @@ public class Url {
     @UuidGenerator
     private UUID id;
 
+    private String email;
+
     private String shortUrl;
     private String longUrl;
 
@@ -36,7 +38,7 @@ public class Url {
         this.shortUrl = shortUrl;
     }
 
-    public String getLongUrl() {
+    public String getLongUrl(){
         return longUrl;
     }
 
@@ -44,8 +46,22 @@ public class Url {
         this.longUrl = longUrl;
     }
 
+    public String getEmail
+            () {
+        return email;
+    }
+
+
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Date getCreated_date() {

@@ -48,4 +48,18 @@ public class UserController {
             return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<?> findUserByEmail(@PathVariable String email){
+        try{
+            Optional<User> user =  userService.findUserByEmail(email);
+            if(user.isPresent()) {
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            }
+            throw new Exception();
+        }
+        catch(Exception e){
+            return new ResponseEntity<>("No email address found",HttpStatus.BAD_REQUEST);
+        }
+    }
 }

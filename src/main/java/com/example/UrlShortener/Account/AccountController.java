@@ -57,4 +57,22 @@ public class AccountController {
         }
     }
 
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getAccountByEmail(@PathVariable String email){
+        try{
+            Optional<Account> account = accountService.getAccountByEmail(email);
+            if(account.isPresent()){
+                return new ResponseEntity<>(account,HttpStatus.OK);
+            }
+            throw new Exception();
+        }
+        catch(Exception e){
+            return new ResponseEntity<>("No email address registered",HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+
+
+
 }

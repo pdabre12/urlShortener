@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/urls")
@@ -30,20 +31,49 @@ public class UrlController {
     @PostMapping("/")
     public ResponseEntity<?> createShortenedUrl(@RequestBody Url url){
         try{
+            Optional<Url> existing_url = urlService.getExistingUrl(url.getLongUrl(),url.getEmail());
+            if(existing_url.isPresent()){
+                existing_url.get()
+                        .setShortUrl("http://urlshortener.com/"+
+                                existing_url.get().getShortUrl());
+                return new ResponseEntity<>(existing_url,HttpStatus.OK);
+            }
             Url created_url = urlService.createShortenedUrl(url);
+            created_url.setShortUrl("http://urlshortener.com/" + created_url.getShortUrl());
             return new ResponseEntity<>(created_url,HttpStatus.CREATED);
         }
         catch(Exception e){
-            return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Exception occurred!",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/url")
-    public String getUrlShort(@RequestBody Url url){
+//    @PostMapping("/url")
+//    public String getUrlShort(@RequestBody Url url){
+//        Optional<Url> existing_url = urlService.getExistingUrl(url.getLongUrl());
+//        String ans =  urlGenerator.generateRandomShortUrl(url.getLongUrl());
+//        System.out.println(ans);
+//        return ans;
+//
+//    }
 
-        String ans =  urlGenerator.generateRandomShortUrl(url.getLongUrl());
-        System.out.println(ans);
-        return ans;
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getUrlsByEmail(@PathVariable String email){
+        try{
+            Optional<List<Url>> urls = urlService.getUrlsByEmail(email);
+            if(urls.isPresent() && (urls.get().size()!=0)){
+                for (Url url:urls.get()) {
+                    url.setShortUrl("http://urlshortener.com/"+url.getShortUrl());
+                }
+                    return new ResponseEntity<>(urls,HttpStatus.OK);
+            }
+            throw new Exception();
 
+        }
+        catch(Exception e){
+            return new ResponseEntity<>("No urls found by the user!",HttpStatus.BAD_REQUEST);
+        }
     }
+
+
+
 }

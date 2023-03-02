@@ -24,13 +24,8 @@ public class UserService {
     }
 
     public User createUser(User user) {
-            Optional<User> existing_user = userRepository.findByEmail(user.getEmail());
-            if (!existing_user.isPresent()) {
-                return userRepository.save(user);
-            }
-        return userRepository.save(user);
 
-
+            return userRepository.save(user);
 
         }
 }
