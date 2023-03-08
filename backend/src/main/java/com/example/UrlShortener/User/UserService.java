@@ -1,5 +1,6 @@
 package com.example.UrlShortener.User;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
+@Transactional
 public class UserService {
     @Autowired
     private UserRepository userRepository;

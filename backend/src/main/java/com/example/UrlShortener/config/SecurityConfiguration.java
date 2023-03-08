@@ -54,7 +54,7 @@ public class SecurityConfiguration {
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(customOidcUserService))
-                .defaultSuccessUrl("http://localhost:5050/urls/", true));
+                .defaultSuccessUrl("http://localhost:5050/api/v1/urls/", true));
         return http.build();
     }
 

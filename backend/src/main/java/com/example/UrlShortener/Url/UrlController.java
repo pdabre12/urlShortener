@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/auth/urls")
+@RequestMapping("/api/v1/urls")
 public class UrlController {
     @Autowired
     private UrlService urlService;

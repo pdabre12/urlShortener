@@ -1,5 +1,6 @@
 package com.example.UrlShortener.Url;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
+@Transactional
 public class UrlService {
 
     @Autowired

@@ -1,6 +1,7 @@
 package com.example.UrlShortener.Account;
 
 import com.example.UrlShortener.config.JwtService;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @Service
 @NoArgsConstructor
+@Transactional
 public class AccountService {
 
    @Autowired
