@@ -1,7 +1,9 @@
 package com.example.UrlShortener.Account;
 
+import com.example.UrlShortener.config.JwtService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +18,27 @@ public class AccountService {
    @Autowired
     private AccountRepository accountRepository;
 
+   @Autowired
+   private JwtService jwtService;
+
+   @Autowired
+   private AuthenticationManager authenticationManager;
+
     public List<Account> getAccounts(){
         System.out.println("its here");
         return accountRepository.findAll();
     }
 
-    public Account createAccount(Account account) {
+    public String createAccount(Account account) {
         int salt = 10;
         BCryptPasswordEncoder bCryptPasswordEncoder = new
                 BCryptPasswordEncoder(salt,new SecureRandom());
         account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
 
-        return accountRepository.save(account);
+        accountRepository.save(account);
+        String token =  jwtService.generateToken(account);
+        System.out.println(token);
+        return token;
     }
 
     public Optional<Account> getAccountByEmail(String email) {
@@ -37,7 +48,9 @@ public class AccountService {
 //    public String loginAccount(Account account) {
 //        try{
 //            Optional<Account> userDetails =  accountRepository.findByEmail(account.getEmail());
-//            return userDetails;
+//            if (userDetails.isPresent()){
+//                BCryptPasswordE account.getPassword()
+//            }
 //
 //
 //        }

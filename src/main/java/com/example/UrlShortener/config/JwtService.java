@@ -1,10 +1,12 @@
 package com.example.UrlShortener.config;
 
+import com.example.UrlShortener.Account.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +14,14 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
-    public static final String SECRET_KEY="urlshortener";
+    public static final String SECRET_KEY="14709625245cmprt3nttq7461f7o8s12rvpgpnsd7iappsgoogleusercontentcom";
 
     public String extractUsername(String token) {
         return extractClaim(token,Claims::getSubject);
@@ -31,7 +35,7 @@ public class JwtService {
     }
 
     //Check whether token is valid
-    public boolean isTokenValid(String token,UserDetails userDetails){
+    public boolean isTokenValid(String token, UserDetails userDetails){
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
 
@@ -50,14 +54,21 @@ public class JwtService {
     public String generateToken(
             Map<String,Object> extraClaims,
             UserDetails userDetails
-    ){
-        return Jwts.builder()
+    ) {
+        try {
+            String token = Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 24 * 60))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+                    .setSubject(userDetails.getUsername())
+                    .setIssuedAt(new Date(System.currentTimeMillis()))
+                    .setExpiration(new Date(System.currentTimeMillis() + 1000 * 24 * 60 * 24))
+                    .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                    .compact();
+            return token;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return "Exception";
+        }
     }
 
     //extract claims from a token
@@ -67,12 +78,13 @@ public class JwtService {
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+
     }
 }

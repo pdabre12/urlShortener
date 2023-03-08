@@ -42,6 +42,9 @@ logging:
   level:
     org:
       springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
         boot:
           autoconfigure:
             security: INFO
