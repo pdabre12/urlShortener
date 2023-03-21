@@ -24,9 +24,10 @@ public class UrlService {
 
     public List<Url> getAllUrls(){
         List<Url> urls =  urlRepository.findAll();
-        for (Url url:urls) {
-            url.setShortUrl("http://urlshortener.com/"+url.getShortUrl());
-        }
+        System.out.println(urls);
+//        for (Url url:urls) {
+//            url.setShortUrl("http://urlshortener.com/"+url.getShortUrl());
+//        }
         return urls;
     }
 

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/urls")
+@CrossOrigin
 public class UrlController {
     @Autowired
     private UrlService urlService;
@@ -22,6 +22,9 @@ public class UrlController {
     public ResponseEntity<?> getAllUrls(){
         try{
             List<Url> urls = urlService.getAllUrls();
+            for (Url url:urls) {
+                url.setShortUrl("http://urlshortener.com/"+url.getShortUrl());
+            }
             return new ResponseEntity<>(urls,HttpStatus.OK);
         }
         catch(Exception e){
@@ -37,14 +40,16 @@ public class UrlController {
                 existing_url.get()
                         .setShortUrl("http://urlshortener.com/"+
                                 existing_url.get().getShortUrl());
+                System.out.println(existing_url.get());
                 return new ResponseEntity<>(existing_url,HttpStatus.OK);
             }
             Url created_url = urlService.createShortenedUrl(url);
             created_url.setShortUrl("http://urlshortener.com/" + created_url.getShortUrl());
+            System.out.println(created_url);
             return new ResponseEntity<>(created_url,HttpStatus.CREATED);
         }
         catch(Exception e){
-            return new ResponseEntity<>("Exception occurred!",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

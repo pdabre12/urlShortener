@@ -43,9 +43,10 @@ public class SecurityConfiguration {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and().
-                csrf().disable()
-                        .authorizeHttpRequests()
-                                .requestMatchers("/api/v1/accounts/auth/**")
+                csrf().
+                disable().
+                authorizeHttpRequests()
+                                .requestMatchers("/api/v1/**")
                                         .permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -54,7 +55,8 @@ public class SecurityConfiguration {
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(customOidcUserService))
-                .defaultSuccessUrl("http://localhost:5050/api/v1/urls/", true));
+                .defaultSuccessUrl("http://localhost:3001/urls", true));
+        ;
         return http.build();
     }
 
