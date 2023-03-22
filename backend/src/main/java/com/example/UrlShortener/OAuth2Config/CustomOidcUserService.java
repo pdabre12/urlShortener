@@ -23,6 +23,7 @@ public class CustomOidcUserService extends OidcUserService {
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser oidcUser = super.loadUser(userRequest);
+        System.out.println(oidcUser);
 
         try {
             return processOidcUser(userRequest, oidcUser);
@@ -33,6 +34,7 @@ public class CustomOidcUserService extends OidcUserService {
 
     private OidcUser processOidcUser(OidcUserRequest userRequest, OidcUser oidcUser) {
         OAuth2ClientUserInfo userInfo = new OAuth2ClientUserInfo(oidcUser.getAttributes());
+        System.out.println(userInfo);
         Optional<User> userOptional = userService.findUserByEmail(userInfo.getEmail());
         if (!userOptional.isPresent()) {
             User user = new User();

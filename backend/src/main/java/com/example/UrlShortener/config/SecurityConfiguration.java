@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -39,16 +40,19 @@ public class SecurityConfiguration {
 //                .defaultSuccessUrl("http://localhost:5050/urls/", true);
 //
 //        return http.build();
-        http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .and().
-                csrf().
+        http.csrf().
                 disable().
                 authorizeHttpRequests()
-                                .requestMatchers("/api/v1/**")
-                                        .permitAll()
+                .requestMatchers("/api/v1/auth/**")
+                .permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .and()
+                .cors()
+                .configurationSource(request -> new CorsConfiguration()
+                        .applyPermitDefaultValues())
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -59,6 +63,8 @@ public class SecurityConfiguration {
         ;
         return http.build();
     }
+
+
 
 
 }

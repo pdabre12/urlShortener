@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/accounts")
+@RequestMapping("/api/v1/")
 @CrossOrigin
 public class AccountController {
     @Autowired
@@ -87,7 +87,7 @@ public class AccountController {
     }
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/get-account/{email}")
     public ResponseEntity<?> getAccountByEmail(@PathVariable String email){
         try{
             Optional<Account> account = accountService.getAccountByEmail(email);

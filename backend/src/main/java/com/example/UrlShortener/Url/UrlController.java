@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3001",methods ={RequestMethod.GET,RequestMethod.DELETE,
+        RequestMethod.POST,RequestMethod.PUT,RequestMethod.PATCH})
 @RestController
 @RequestMapping("/api/v1/urls")
-@CrossOrigin
+
 public class UrlController {
     @Autowired
     private UrlService urlService;
@@ -44,6 +46,7 @@ public class UrlController {
                 return new ResponseEntity<>(existing_url,HttpStatus.OK);
             }
             Url created_url = urlService.createShortenedUrl(url);
+            System.out.println(created_url);
             created_url.setShortUrl("http://urlshortener.com/" + created_url.getShortUrl());
             System.out.println(created_url);
             return new ResponseEntity<>(created_url,HttpStatus.CREATED);
@@ -62,7 +65,7 @@ public class UrlController {
 //
 //    }
 
-    @GetMapping("/{email}")
+    @GetMapping("/all-urls/{email}")
     public ResponseEntity<?> getUrlsByEmail(@PathVariable String email){
         try{
             Optional<List<Url>> urls = urlService.getUrlsByEmail(email);

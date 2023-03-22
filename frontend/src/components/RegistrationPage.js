@@ -1,8 +1,8 @@
 
 import axios from "axios";
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import { Card } from "react-bootstrap";
-
+import { useNavigate } from "react-router-dom";
 
 const RegistrationPage = () => {
 
@@ -10,9 +10,13 @@ const RegistrationPage = () => {
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
   const [role,setRole] = useState("USER")
-
+  const navigate = useNavigate();
   
-
+  useEffect(()=>{
+    if (localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null){
+      navigate("/myurls")
+    }
+  },[])
     const checkLoginDetails = async (e) => {
       e.preventDefault();
       const data ={
@@ -20,15 +24,23 @@ const RegistrationPage = () => {
         password:password,
         role:role
       }
-      const response = await axios.post("http://localhost:5050/api/v1/accounts/auth/register", 
-      { ...data
+      const response = await axios.post("http://localhost:5050/api/v1/auth/register", 
+      { ...data,
+        // 'headers': {
+        //   'Authorization': 'Bearer ' + jwtStr
+        // }
     });
       if (response.status === 200 || response.status === 201) {
         // TODO: Write code for successful login redirection
-        console.log("Login Response", response);
+        console.log("Login Response", response.data);
+        localStorage.setItem("JWT",response.data)
+        if (localStorage.getItem("JWT")!==null||localStorage.getItem("user")!==null){
+            navigate("/myurls") 
+        }
       } else {
         console.log(response);
       }
+      
     };
 
     return (

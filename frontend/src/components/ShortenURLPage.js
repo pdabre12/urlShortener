@@ -1,33 +1,53 @@
 
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card,ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-
-const MainPage = () =>  {
+const ShortenURLPage = () =>  {
     const [shortUrl,setShortUrl] = useState("");
     const [longUrl,setLongUrl] = useState("");
+    const navigate = useNavigate();
 
+    useEffect(()=>{
+      if(localStorage.getItem("JWT")===null||localStorage.getItem('user')===null){
+        localStorage.removeItem("JWT")
+        localStorage.removeItem('user')
+        navigate("/")
+      }
+    },[])
 
    async function LongToShortURL(e) {
                 
         e.preventDefault();
         const data = {
             longUrl : longUrl,
-            email: "pdabre12@gmail.com",
+            email: localStorage.getItem('user'),
             
         }
         console.log(data);
-        const response = await axios.post("http://localhost:5050/api/v1/urls/",{
-            ...data
+        const response = await axios.post("http://localhost:5050/api/v1/urls/",
+             { ...data
+            
+            },{
+            'headers': {
+              'Authorization': 'Bearer ' + localStorage.getItem("JWT")
+            }
+          
     });
         if (response.status === 200 || response.status === 201){
-            console.log(response)
+            console.log(response.data)
+            if (!response.data.shortUrl){
+              localStorage.removeItem("JWT")
+              localStorage.removeItem("user")
+              navigate("/")
+            }
             setShortUrl(response.data.shortUrl);
 
         }
         else{
+
             console.log(response);
         }
     }
@@ -81,4 +101,4 @@ value={shortUrl               }
     </>
     )
 }
-export default MainPage
+export default ShortenURLPage

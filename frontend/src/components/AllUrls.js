@@ -3,22 +3,48 @@ import React from "react";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const AllUrls =() => {
     const [urls,setUrls] = useState([]);
+    const navigate = useNavigate();
+
+
     useEffect(() => {
-       let  email = 'pdabre12@gmail.com'
-        axios.get(`http://localhost:5050/api/v1/urls/${email}`)
+       
+       if(localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null){
+        axios.get(`http://localhost:5050/api/v1/urls/all-urls/${localStorage.getItem('user')}`,{
+            'headers': {
+                  'Authorization': 'Bearer ' + localStorage.getItem("JWT")
+                }
+        })
         .then(res=>{
-            setUrls(res.data)
             console.log(res.data)
-            console.log(urls)
+            if (res.data.length>=0){
+                setUrls(res.data)
+                console.log(urls)
+            }
+            else{
+                window.alert("Please login again, JWT token expired")
+                localStorage.removeItem("JWT")
+                localStorage.removeItem("user")
+                navigate("/")
+            }
+            
 
         })
         .catch(err=>{
+            
             console.log(err)
+            // localStorage.removeItem("JWT")
+            // localStorage.removeItem("user")
         })
+    }
+    else{
+        console.log("No JWT token found, login first!")
+        navigate("/")
+    }
         
     }, [])
 
