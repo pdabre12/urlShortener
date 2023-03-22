@@ -4,7 +4,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link
 } from "react-router-dom";
 import RegistrationPage from "./components/RegistrationPage";
 import ShortenURLPage from "./components/ShortenURLPage";

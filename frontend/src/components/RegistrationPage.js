@@ -34,6 +34,7 @@ const RegistrationPage = () => {
         // TODO: Write code for successful login redirection
         console.log("Login Response", response.data);
         localStorage.setItem("JWT",response.data)
+        setRole("USER")
         if (localStorage.getItem("JWT")!==null||localStorage.getItem("user")!==null){
             navigate("/myurls") 
         }

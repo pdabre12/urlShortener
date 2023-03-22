@@ -67,7 +67,8 @@ const AllUrls =() => {
                         <tr key={url.id}>
                             <td>{url.email}</td>
                             <td>{url.longUrl}</td>
-                            <td>{url.shortUrl}</td>
+
+                            <td><a id={url.id} href={url.shortUrl}>{url.shortUrl}</a></td>
                         </tr>
                     )}
                 </tbody>

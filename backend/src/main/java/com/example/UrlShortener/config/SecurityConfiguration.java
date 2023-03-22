@@ -58,8 +58,8 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .oidcUserService(customOidcUserService))
-                .defaultSuccessUrl("http://localhost:3001/urls", true));
+                                .oidcUserService(customOidcUserService)));
+//                .defaultSuccessUrl("http://localhost:3001/urls", true));
         ;
         return http.build();
     }
