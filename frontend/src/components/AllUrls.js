@@ -4,6 +4,7 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 
 const AllUrls =() => {
@@ -12,8 +13,14 @@ const AllUrls =() => {
 
 
     useEffect(() => {
-       
-       if(localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null){
+        // document.cookie = "user=John"; // update only cookie named 'user'
+        // if(jsId != null) {
+        //     if (jsId instanceof Array)
+        //         jsId = jsId[0].substring(11);
+        //     else
+        //         jsId = jsId.substring(11);
+        // }
+       if(localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null||Cookies.get("JSESSIONID")){
         axios.get(`http://localhost:5050/api/v1/urls/all-urls/${localStorage.getItem('user')}`,{
             'headers': {
                   'Authorization': 'Bearer ' + localStorage.getItem("JWT")

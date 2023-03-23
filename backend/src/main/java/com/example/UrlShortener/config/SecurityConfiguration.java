@@ -42,11 +42,15 @@ public class SecurityConfiguration {
 //        return http.build();
         http.csrf().
                 disable().
-                authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")
+                authorizeHttpRequests((authz)->
+                        authz
+//                .requestMatchers("/api/v1/auth/**").hasAnyRole()
+                .requestMatchers("/api/v1/**")
+                .authenticated()
+
+                .requestMatchers("/**")
                 .permitAll()
-                .anyRequest().authenticated()
-                .and()
+                )
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
@@ -58,12 +62,17 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .oidcUserService(customOidcUserService)));
-//                .defaultSuccessUrl("http://localhost:3001/urls", true));
+                                .oidcUserService(customOidcUserService))
+                .defaultSuccessUrl("http://localhost:3003/myurls", true));
         ;
         return http.build();
     }
 
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers("/api/v1/users/**", "/api/v1/accounts/**",
+//                "/api/v1/urls/**");
+//    }
 
 
 

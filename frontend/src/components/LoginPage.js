@@ -21,7 +21,7 @@ export default function LoginPage() {
         email:email,
         password:password,
       }
-      const response = await axios.post("http://localhost:5050/api/v1/auth/login", 
+      const response = await axios.post("http://localhost:5050/auth/login", 
       { ...data,
    
     });

@@ -6,6 +6,7 @@ import com.example.UrlShortener.config.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/auth")
 @CrossOrigin
 public class AccountController {
     @Autowired
@@ -44,7 +45,7 @@ public class AccountController {
 
     }
 
-    @PostMapping(path = "/auth/register")
+    @PostMapping(path = "/register")
     public ResponseEntity<?> createAccount(@RequestBody Account account){
         try{
             Optional<Account> existing_account =
@@ -65,7 +66,7 @@ public class AccountController {
         }
     }
 
-    @PostMapping(path = "/auth/login")
+    @PostMapping(path = "/login")
     public ResponseEntity<?> loginAccount(@RequestBody Account account){
         try {
             Optional<Account> existing_account = accountService.getAccountByEmail(account.getEmail());
@@ -99,6 +100,12 @@ public class AccountController {
         catch(Exception e){
             return new ResponseEntity<>("No email address registered",HttpStatus.BAD_REQUEST);
         }
+
+    }
+    @GetMapping("/get-authorized-user")
+    public ResponseEntity<?> getAuthorizedUser(){
+        return new ResponseEntity<>(SecurityContextHolder.getContext().getAuthentication(),HttpStatus.OK
+        );
 
     }
 

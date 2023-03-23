@@ -24,7 +24,7 @@ const RegistrationPage = () => {
         password:password,
         role:role
       }
-      const response = await axios.post("http://localhost:5050/api/v1/auth/register", 
+      const response = await axios.post("http://localhost:5050/auth/register", 
       { ...data,
         // 'headers': {
         //   'Authorization': 'Bearer ' + jwtStr
@@ -34,6 +34,7 @@ const RegistrationPage = () => {
         // TODO: Write code for successful login redirection
         console.log("Login Response", response.data);
         localStorage.setItem("JWT",response.data)
+        localStorage.setItem("user",email)
         setRole("USER")
         if (localStorage.getItem("JWT")!==null||localStorage.getItem("user")!==null){
             navigate("/myurls") 
