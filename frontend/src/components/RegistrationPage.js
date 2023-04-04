@@ -14,9 +14,15 @@ const RegistrationPage = () => {
   
   useEffect(()=>{
     if (localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null){
+      axios.get("http://localhost:5050/auth/get-authorized-user")
+      .then(res=>{
+        console.log(res)
+      })
+      .catch(err=>console.log(err))
       navigate("/myurls")
     }
   },[])
+  
     const checkLoginDetails = async (e) => {
       e.preventDefault();
       const data ={

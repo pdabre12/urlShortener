@@ -13,8 +13,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:3001",methods ={RequestMethod.GET,RequestMethod.DELETE,
-        RequestMethod.POST,RequestMethod.PUT,RequestMethod.PATCH})
+@CrossOrigin()
 @RestController
 @RequestMapping("/")
 

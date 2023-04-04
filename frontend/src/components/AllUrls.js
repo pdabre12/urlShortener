@@ -20,7 +20,7 @@ const AllUrls =() => {
         //     else
         //         jsId = jsId.substring(11);
         // }
-       if(localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null||Cookies.get("JSESSIONID")){
+       if(localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null){
         axios.get(`http://localhost:5050/api/v1/urls/all-urls/${localStorage.getItem('user')}`,{
             'headers': {
                   'Authorization': 'Bearer ' + localStorage.getItem("JWT")
@@ -49,6 +49,11 @@ const AllUrls =() => {
         })
     }
     else{
+        axios.get("http://localhost:5050/auth/get-authorized-user")
+      .then(res=>{
+        console.log(res)
+      })
+      .catch(err=>console.log(err))
         console.log("No JWT token found, login first!")
         navigate("/")
     }

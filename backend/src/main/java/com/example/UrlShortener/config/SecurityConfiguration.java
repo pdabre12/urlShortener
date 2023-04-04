@@ -63,7 +63,7 @@ public class SecurityConfiguration {
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(customOidcUserService))
-                .defaultSuccessUrl("http://localhost:3003/myurls", true));
+                .defaultSuccessUrl("http://localhost:3001/myurls", true));
         ;
         return http.build();
     }

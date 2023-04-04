@@ -6,6 +6,7 @@ import com.example.UrlShortener.config.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,6 +55,7 @@ public class AccountController {
             if (!existing_account.isPresent()){
                 String token =  accountService.createAccount(account);
                 System.out.println(token);
+                String email = account.getEmail();
                 User new_user = userService.createUser(new User(account.getEmail()));
                 return new ResponseEntity<>(token,HttpStatus.CREATED);
             }
@@ -104,8 +106,16 @@ public class AccountController {
     }
     @GetMapping("/get-authorized-user")
     public ResponseEntity<?> getAuthorizedUser(){
-        return new ResponseEntity<>(SecurityContextHolder.getContext().getAuthentication(),HttpStatus.OK
-        );
+        String name = (SecurityContextHolder.getContext().getAuthentication().getName());
+//        String extracted_name = new String(name);
+        System.out.println(name);
+        Optional<User> user = userService.findUserById(name);
+        System.out.println(user);
+        if(user.isPresent()){
+            String email = user.get().getEmail();
+            return new ResponseEntity<>(email,HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Could not find security context",HttpStatus.BAD_REQUEST);
 
     }
 

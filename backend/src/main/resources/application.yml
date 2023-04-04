@@ -37,7 +37,7 @@ server:
   use-forward-header: true
 
 jwt:
-  secret: urlshortener
+  secret: "14709625245cmprt3nttq7461f7o8s12rvpgpnsd7iappsgoogleusercontentcom"
 logging:
   level:
     org:

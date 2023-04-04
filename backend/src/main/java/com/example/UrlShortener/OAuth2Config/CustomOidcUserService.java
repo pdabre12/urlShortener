@@ -34,12 +34,14 @@ public class CustomOidcUserService extends OidcUserService {
 
     private OidcUser processOidcUser(OidcUserRequest userRequest, OidcUser oidcUser) {
         OAuth2ClientUserInfo userInfo = new OAuth2ClientUserInfo(oidcUser.getAttributes());
-        System.out.println(userInfo);
+//        System.out.println(userRequest.getAccessToken().g());
         Optional<User> userOptional = userService.findUserByEmail(userInfo.getEmail());
         if (!userOptional.isPresent()) {
             User user = new User();
             user.setEmail(userInfo.getEmail());
             // set other needed data
+            user.setId(userInfo.getId());
+
             userService.createUser(user);
         }
 
