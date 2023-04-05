@@ -6,7 +6,7 @@ services:
     container_name: react-frontend
     ports:
       - "3000:3000"
-      
+
   backend:
     image: 'java-backend'
     build: backend/
@@ -29,6 +29,8 @@ services:
       - POSTGRES_PASSWORD=pdabre12
     ports:
       - "5432:5432"
+    volumes:
+      - volume_name:/var/lib/postgresql/data 
 
 
     
