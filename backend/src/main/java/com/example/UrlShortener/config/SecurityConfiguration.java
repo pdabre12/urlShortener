@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,7 +23,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
+    @Autowired
+    private Environment env;
 
+    String REACT_APP = env.getProperty("REACT_FRONTEND");
     private final CustomOidcUserService customOidcUserService;
 
     private  final JwtAuthenticationFilter jwtAuthFilter;
@@ -63,7 +67,7 @@ public class SecurityConfiguration {
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(customOidcUserService))
-                .defaultSuccessUrl("http://localhost:3001/myurls", true));
+                .defaultSuccessUrl(REACT_APP, true));
         ;
         return http.build();
     }
