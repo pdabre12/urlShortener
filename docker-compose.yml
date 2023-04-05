@@ -27,6 +27,7 @@ services:
     environment:
       - POSTGRES_USER=pdabre12
       - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=urlshortener
     ports:
       - "5432:5432"
    
