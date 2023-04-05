@@ -29,8 +29,7 @@ services:
       - POSTGRES_PASSWORD=pdabre12
     ports:
       - "5432:5432"
-    volumes:
-      - volume_name:/var/lib/postgresql/data 
+   
 
 
     
