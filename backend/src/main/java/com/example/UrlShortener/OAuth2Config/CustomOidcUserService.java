@@ -3,6 +3,7 @@ package com.example.UrlShortener.OAuth2Config;
 import com.example.UrlShortener.User.User;
 import com.example.UrlShortener.User.UserRepository;
 import com.example.UrlShortener.User.UserService;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
@@ -35,6 +36,7 @@ public class CustomOidcUserService extends OidcUserService {
     private OidcUser processOidcUser(OidcUserRequest userRequest, OidcUser oidcUser) {
         OAuth2ClientUserInfo userInfo = new OAuth2ClientUserInfo(oidcUser.getAttributes());
 //        System.out.println(userRequest.getAccessToken().g());
+        
         Optional<User> userOptional = userService.findUserByEmail(userInfo.getEmail());
         if (!userOptional.isPresent()) {
             User user = new User();
