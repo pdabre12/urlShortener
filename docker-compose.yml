@@ -12,14 +12,14 @@ services:
       - SPRING_DATASOURCE_PASSWORD=admin
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
-      -"5050:5050"
+      - "5050:5050"
 
   frontend:
     image: 'react-frontend'
     build: frontend/
     container_name: react-frontend
     ports:
-      -"3000:3000"
+      - "3000:3000"
 
   db:
     image: 'postgres:13.1-alpine'
@@ -28,7 +28,7 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=pdabre12
     ports:
-      -"5432:5432"
+      - "5432:5432"
 
 
     
