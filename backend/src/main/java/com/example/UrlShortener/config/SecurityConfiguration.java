@@ -26,7 +26,6 @@ public class SecurityConfiguration {
     @Autowired
     private Environment env;
 
-    String REACT_APP = env.getProperty("REACT_FRONTEND");
     private final CustomOidcUserService customOidcUserService;
 
     private  final JwtAuthenticationFilter jwtAuthFilter;
@@ -67,7 +66,7 @@ public class SecurityConfiguration {
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(customOidcUserService))
-                .defaultSuccessUrl(REACT_APP, true));
+                .defaultSuccessUrl("http://localhost:3000/myurls", true));
         ;
         return http.build();
     }

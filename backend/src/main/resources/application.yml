@@ -33,7 +33,7 @@ spring:
   main:
     allow-circular-references: true
 server:
-  port: '5050'
+  port: '8080'
   use-forward-header: true
 
 jwt:
