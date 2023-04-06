@@ -21,7 +21,7 @@ export default function LoginPage() {
         email:email,
         password:password,
       }
-      const response = await axios.post("http://localhost:5050/auth/login", 
+      const response = await axios.post("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/auth/login", 
       { ...data,
    
     });
@@ -81,14 +81,14 @@ export default function LoginPage() {
 
        
         <Card.Header style={{margin:"5rem",border:"0.01rem solid black",borderRadius:"0.5rem",backgroundColor:"white",marginTop:"2.5rem"}}>
-          <a href="http://localhost:5050/oauth2/authorization/google" style={{textDecoration:'none'}}>
+          <a href="http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/oauth2/authorization/google" style={{textDecoration:'none'}}>
                     <img src="https://raw.githubusercontent.com/callicoder/spring-boot-react-oauth2-social-login-demo/master/react-social/src/img/google-logo.png"
                     style={{height: "1.5rem",marginLeft: "1rem"} } alt="Google" /> 
                     <p style={{float:"right", marginRight:"6rem"}}>Log In with Google</p></a>
                    </Card.Header>
 
                    <Card.Header style={{margin:"5rem",marginTop:"-3rem",border:"0.01rem solid black",borderRadius:"0.5rem",backgroundColor:"white"}}>
-                    <a href="http://localhost:5050/oauth2/authorization/github" style={{textDecoration:'none'}}>
+                    <a href="http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/authorization/github" style={{textDecoration:'none'}}>
                     <img src="https://raw.githubusercontent.com/callicoder/spring-boot-react-oauth2-social-login-demo/master/react-social/src/img/github-logo.png"
                     style={{height: "1.2rem",marginLeft: "1rem"}} alt="Github" /> 
                     <p style={{float:"right",marginRight:"6rem"}}>Log In with Github</p></a>

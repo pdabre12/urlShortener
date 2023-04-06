@@ -27,7 +27,7 @@ const ShortenURLPage = () =>  {
             
         }
         console.log(data);
-        const response = await axios.post("http://localhost:5050/api/v1/urls/",
+        const response = await axios.post("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/api/v1/urls/",
              { ...data
             
             },{

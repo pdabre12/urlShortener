@@ -14,7 +14,7 @@ const RegistrationPage = () => {
   
   useEffect(()=>{
     if (localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null){
-      axios.get("http://localhost:5050/auth/get-authorized-user")
+      axios.get("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/auth/get-authorized-user")
       .then(res=>{
         console.log(res)
       })
@@ -30,7 +30,7 @@ const RegistrationPage = () => {
         password:password,
         role:role
       }
-      const response = await axios.post("http://localhost:5050/auth/register", 
+      const response = await axios.post("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/auth/register", 
       { ...data,
         // 'headers': {
         //   'Authorization': 'Bearer ' + jwtStr
@@ -88,14 +88,14 @@ const RegistrationPage = () => {
 
        
         <Card.Header style={{margin:"5rem",border:"0.01rem solid black",borderRadius:"0.5rem",backgroundColor:"white",marginTop:"2.5rem"}}>
-          <a href="http://localhost:5050/oauth2/authorization/google" style={{textDecoration:'none'}}>
+          <a href="http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/oauth2/authorization/google" style={{textDecoration:'none'}}>
                     <img src="https://raw.githubusercontent.com/callicoder/spring-boot-react-oauth2-social-login-demo/master/react-social/src/img/google-logo.png"
                     style={{height: "1.2rem",marginLeft: "1rem"} } alt="Google" /> 
                     <p style={{float:"right", marginRight:"6rem"}}>Sign up with Google</p></a>
                    </Card.Header>
 
                    <Card.Header style={{margin:"5rem",marginTop:"-3rem",border:"0.01rem solid black",borderRadius:"0.5rem",backgroundColor:"white"}}>
-                    <a href="http://localhost:5050/oauth2/authorization/github" style={{textDecoration:'none'}}>
+                    <a href="http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/oauth2/authorization/github" style={{textDecoration:'none'}}>
                     <img src="https://raw.githubusercontent.com/callicoder/spring-boot-react-oauth2-social-login-demo/master/react-social/src/img/github-logo.png"
                     style={{height: "1.2rem",marginLeft: "1rem"}} alt="Github" /> 
                     <p style={{float:"right",marginRight:"6rem"}}>Sign up with Github</p></a>

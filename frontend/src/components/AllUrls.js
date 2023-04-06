@@ -21,7 +21,7 @@ const AllUrls =() => {
         //         jsId = jsId.substring(11);
         // }
        if(localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null){
-        axios.get(`http://localhost:5050/api/v1/urls/all-urls/${localStorage.getItem('user')}`,{
+        axios.get(`http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/api/v1/urls/all-urls/${localStorage.getItem('user')}`,{
             'headers': {
                   'Authorization': 'Bearer ' + localStorage.getItem("JWT")
                 }
@@ -49,7 +49,7 @@ const AllUrls =() => {
         })
     }
     else{
-        axios.get("http://localhost:5050/auth/get-authorized-user")
+        axios.get("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/auth/get-authorized-user")
       .then(res=>{
         console.log(res)
       })
