@@ -4,26 +4,25 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { useCookies } from "react-cookie";
+import getLocalStorageItemWithExpiry from "../util/getLocalStorage";
+
 
 
 const AllUrls =() => {
     const [urls,setUrls] = useState([]);
     const navigate = useNavigate();
-
+    const [cookies,setCookie,removeCookie] = useCookies(['token','user'])
 
     useEffect(() => {
-        // document.cookie = "user=John"; // update only cookie named 'user'
-        // if(jsId != null) {
-        //     if (jsId instanceof Array)
-        //         jsId = jsId[0].substring(11);
-        //     else
-        //         jsId = jsId.substring(11);
+            if(!getLocalStorageItemWithExpiry("user")||!getLocalStorageItemWithExpiry("token")){
+                navigate("/")
+              }
         // }
-       if(localStorage.getItem("JWT")!==null||localStorage.getItem('user')!==null){
-        axios.get(`http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/api/v1/urls/all-urls/${localStorage.getItem('user')}`,{
+       console.log(getLocalStorageItemWithExpiry("user"))
+        axios.get(`${process.env.REACT_APP_SERVER}/api/v1/urls/all-urls/${getLocalStorageItemWithExpiry("user")}`,{
             'headers': {
-                  'Authorization': 'Bearer ' + localStorage.getItem("JWT")
+                  'Authorization': 'Bearer ' + getLocalStorageItemWithExpiry("token")
                 }
         })
         .then(res=>{
@@ -34,29 +33,18 @@ const AllUrls =() => {
             }
             else{
                 window.alert("Please login again, JWT token expired")
-                localStorage.removeItem("JWT")
-                localStorage.removeItem("user")
+            
                 navigate("/")
             }
             
 
         })
         .catch(err=>{
-            
             console.log(err)
-            // localStorage.removeItem("JWT")
-            // localStorage.removeItem("user")
+        
         })
-    }
-    else{
-        axios.get("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/auth/get-authorized-user")
-      .then(res=>{
-        console.log(res)
-      })
-      .catch(err=>console.log(err))
-        console.log("No JWT token found, login first!")
-        navigate("/")
-    }
+    
+    
         
     }, [])
 
@@ -66,6 +54,7 @@ const AllUrls =() => {
         <>
         <div className="container">
             <h3 className="p-3 text-center">My URLS - A list of all shortened URLs</h3>
+            {urls &&
             <table className="table table-striped table-bordered">
                 <thead>
                     <tr>
@@ -85,7 +74,9 @@ const AllUrls =() => {
                     )}
                 </tbody>
             </table>
+}
         </div>
+                    
         <button style={{float:"right",marginRight:"5rem",marginTop:"2rem",backgroundColor:"green"}} className="btn btn-secondary"><Link to="/urls" style={{textDecoration:"none",color:"whitesmoke"
     }}>Shorten Another URL</Link></button>
         </>

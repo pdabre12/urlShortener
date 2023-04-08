@@ -4,17 +4,23 @@ import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import getLocalStorageItemWithExpiry from "../util/getLocalStorage";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const ShortenURLPage = () =>  {
     const [shortUrl,setShortUrl] = useState("");
     const [longUrl,setLongUrl] = useState("");
     const navigate = useNavigate();
+    
+    const handleCopy = () => {
+      console.log('Text copied to clipboard!');
+    };
 
     useEffect(()=>{
-      if(localStorage.getItem("JWT")===null||localStorage.getItem('user')===null){
-        localStorage.removeItem("JWT")
-        localStorage.removeItem('user')
-        navigate("/")
+      if(!getLocalStorageItemWithExpiry("user")||!getLocalStorageItemWithExpiry("token")){
+        navigate("/myurls")
       }
     },[])
 
@@ -23,25 +29,23 @@ const ShortenURLPage = () =>  {
         e.preventDefault();
         const data = {
             longUrl : longUrl,
-            email: localStorage.getItem('user'),
+            email: getLocalStorageItemWithExpiry("user"),
             
         }
         console.log(data);
-        const response = await axios.post("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/api/v1/urls/",
+        const response = await axios.post(`${process.env.REACT_APP_SERVER}/api/v1/urls/`,
              { ...data
             
             },{
             'headers': {
-              'Authorization': 'Bearer ' + localStorage.getItem("JWT")
+              'Authorization': 'Bearer ' + getLocalStorageItemWithExpiry("token")
             }
           
     });
         if (response.status === 200 || response.status === 201){
             console.log(response.data)
             if (!response.data.shortUrl){
-              localStorage.removeItem("JWT")
-              localStorage.removeItem("user")
-              navigate("/")
+              window.alert("Request failed!Please try again..")
             }
             setShortUrl(response.data.shortUrl);
 
@@ -71,6 +75,7 @@ const ShortenURLPage = () =>  {
               onChange={e => setLongUrl(e.target.value)}
             />
 <br></br>
+<div>
 <label>Shortened url</label>
             <input
               type="text"
@@ -80,7 +85,12 @@ const ShortenURLPage = () =>  {
 value={shortUrl               }
                disabled
             />
-          
+            <div style={{float:"right",marginTop:"-2.3rem"}}>
+            <CopyToClipboard text={shortUrl} onCopy={handleCopy}>
+          <FontAwesomeIcon  size="1.5x" style={{width:"2rem",cursor:"pointer"}} icon={faCopy}/>
+        </CopyToClipboard>
+        </div>
+        </div>
           </div>
           <div className="d-grid gap-2 mt-3" style={{margin:"1.5rem",height:"3rem"}}>
             <button type="submit" className="btn btn-primary">

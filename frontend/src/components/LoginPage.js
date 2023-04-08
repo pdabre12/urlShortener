@@ -3,17 +3,72 @@ import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
+import getLocalStorageItemWithExpiry from "../util/getLocalStorage";
+import setLocalStorageItemWithExpiry from "../util/setlocalStorage";
 
 export default function LoginPage() {
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
+    const [ user, setUser ] = useState([]);
     const navigate = useNavigate();
+    const [accessToken,setAccessToken] = useState("");
+    var uemail = ''
 
-    useEffect(()=>{
-      if (localStorage.getItem("JWT")!==null||localStorage.getItem("user")!==null){
-        navigate("/myurls")
-      }
-    },[])
+    useEffect(() => {
+        if(getLocalStorageItemWithExpiry("user")&&getLocalStorageItemWithExpiry("token")){
+          navigate("/myurls")
+        }
+        console.log(user)
+          if (user) {
+              axios
+                  .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`, {
+                      headers: {
+                          Authorization: `Bearer ${accessToken}`,
+                          Accept: 'application/json'
+                      }
+                  })
+                  .then((res) => {
+                      console.log(res)
+                      uemail =  res.data.email;
+                      const data = {
+                        email:uemail,
+                        password:"",
+                        role:"USER"
+                    }
+                    return data
+                      
+                      
+                  })
+                  .then((res)=>{
+                    axios.post(process.env.REACT_APP_SERVER+"/auth/get-jwt-token",{
+                      ...res
+                  })
+                  .then(res=>{
+                      console.log(res);
+                      
+                      setLocalStorageItemWithExpiry("token",res.data.token, 86400)
+                      setLocalStorageItemWithExpiry("user",res.data.email, 86400)
+                      
+                      if(getLocalStorageItemWithExpiry("token")&&getLocalStorageItemWithExpiry('user')){
+                        navigate("/myurls")}
+    
+                      
+                      
+                  })
+                  .catch(err=>{
+                      console.log(err);
+                  })
+
+                  })
+                  .catch((err) => console.log(err));
+
+              
+              
+          }
+      },
+      [user]
+  );
 
     const handleLogin = async (e) => {
       e.preventDefault();
@@ -21,26 +76,39 @@ export default function LoginPage() {
         email:email,
         password:password,
       }
-      const response = await axios.post("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/auth/login", 
+      const response = await axios.post(`${process.env.REACT_APP_SERVER}/auth/login`, 
       { ...data,
    
     });
       if (response.status === 200 || response.status === 201) {
         // TODO: Write code for successful login redirection
         console.log("Login Response", response.data);
-        localStorage.setItem("JWT",response.data)
-        localStorage.setItem("user",email)
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 1);
+        setLocalStorageItemWithExpiry("token",response.data, 86400)
+        setLocalStorageItemWithExpiry("user",email, 86400)
+                  
+      if(getLocalStorageItemWithExpiry("token")&&getLocalStorageItemWithExpiry('user')){
+          navigate("/myurls")}
 
-        console.log(localStorage.getItem('user'))
-        if (localStorage.getItem("JWT")!==null||localStorage.getItem("user")!==null){
-            navigate("/myurls") 
-        }
       } else {
         window.alert("Login Failed! Please try again..")
         console.log(response);
       }
       
     };
+
+   
+    const oauth2login = useGoogleLogin({
+        onSuccess: (codeResponse) => {
+          console.log(codeResponse)
+            setUser(codeResponse)
+            console.log(user)
+            setAccessToken(codeResponse.access_token)
+        }
+            ,
+        onError: (error) => console.log('Login Failed:', error)
+    });
 
 
     return (
@@ -79,21 +147,21 @@ export default function LoginPage() {
            <a href="/signup">
             <p className="forgot-password text-right mt-2" style={{textAlign:"center"}}> Not Registered yet?</p></a>
 
-       
+            </form>
         <Card.Header style={{margin:"5rem",border:"0.01rem solid black",borderRadius:"0.5rem",backgroundColor:"white",marginTop:"2.5rem"}}>
-          <a href="http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/oauth2/authorization/google" style={{textDecoration:'none'}}>
+          <button onClick={()=>oauth2login()} style={{textDecoration:'none'}}>
                     <img src="https://raw.githubusercontent.com/callicoder/spring-boot-react-oauth2-social-login-demo/master/react-social/src/img/google-logo.png"
                     style={{height: "1.5rem",marginLeft: "1rem"} } alt="Google" /> 
-                    <p style={{float:"right", marginRight:"6rem"}}>Log In with Google</p></a>
+                    <p style={{float:"right", marginRight:"6rem"}}>Log In with Google</p></button>
                    </Card.Header>
 
-                   <Card.Header style={{margin:"5rem",marginTop:"-3rem",border:"0.01rem solid black",borderRadius:"0.5rem",backgroundColor:"white"}}>
-                    <a href="http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/authorization/github" style={{textDecoration:'none'}}>
+                   {/* <Card.Header style={{margin:"5rem",marginTop:"-3rem",border:"0.01rem solid black",borderRadius:"0.5rem",backgroundColor:"white"}}>
+                   <a href={`${process.env.REACT_APP_SERVER}/oauth2/authorization/github`} style={{textDecoration:'none'}}>
                     <img src="https://raw.githubusercontent.com/callicoder/spring-boot-react-oauth2-social-login-demo/master/react-social/src/img/github-logo.png"
                     style={{height: "1.2rem",marginLeft: "1rem"}} alt="Github" /> 
                     <p style={{float:"right",marginRight:"6rem"}}>Log In with Github</p></a>
-                   </Card.Header>
-                   </form>
+                   </Card.Header> */}
+                   
       </div>
     </Card>
     </>

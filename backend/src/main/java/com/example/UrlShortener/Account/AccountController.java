@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class AccountController {
 
     @Autowired
     private JwtService jwtService;
+
 
     @Autowired
     private UserService userService;
@@ -104,19 +106,37 @@ public class AccountController {
         }
 
     }
-    @GetMapping("/get-authorized-user")
-    public ResponseEntity<?> getAuthorizedUser(){
-        String name = (SecurityContextHolder.getContext().getAuthentication().getName());
-//        String extracted_name = new String(name);
-        System.out.println(name);
-        Optional<User> user = userService.findUserById(name);
-        System.out.println(user);
-        if(user.isPresent()){
-            String email = user.get().getEmail();
-            return new ResponseEntity<>(email,HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Could not find security context",HttpStatus.BAD_REQUEST);
+    @PostMapping("/get-jwt-token")
+    public ResponseEntity<?> getJwtToken(@RequestBody Account account) {
+        try {
+            Optional<Account> existing_account = accountService.getAccountByEmail(account.getEmail());
+            System.out.println(existing_account);
 
+
+            if (existing_account.isPresent()) {
+                String token = jwtService.generateToken(existing_account.get());
+                MyResponse myResponse = new MyResponse(token, account.getEmail());
+                return new ResponseEntity<>(myResponse, HttpStatus.OK);
+            } else {
+                String token = accountService.createAccount(account);
+                MyResponse myResponse = new MyResponse(token, account.getEmail());
+                return new ResponseEntity<>(myResponse, HttpStatus.CREATED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Could not generate jwt token", HttpStatus.BAD_REQUEST);
+
+        }
+    }
+
+    @GetMapping("/demo")
+    public ResponseEntity<?> demo() {
+        RestTemplate restTemplate = new RestTemplate();
+
+// Make a GET request with the URL of the API you want to call
+        String url = "http://localhost:5050/auth/get-authorized-user";
+        String responseBody = restTemplate.getForObject(url, String.class);
+        System.out.println(responseBody);
+        return new ResponseEntity<>(responseBody,HttpStatus.OK);
     }
 
 

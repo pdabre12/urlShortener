@@ -8,9 +8,12 @@ import {
 import RegistrationPage from "./components/RegistrationPage";
 import ShortenURLPage from "./components/ShortenURLPage";
 import AllUrls from "./components/AllUrls";
+import Test from "./components/Test";
+import { CookiesProvider } from "react-cookie";
 
 function App() {
   return (
+  <CookiesProvider>
     <Router>
       <div className="app">
     <Routes>
@@ -18,9 +21,11 @@ function App() {
       <Route path="/signup" element={<RegistrationPage/>}/>
       <Route path="/urls" element={<ShortenURLPage/>}/>
       <Route path="/myurls" element={<AllUrls/>}/>
+      <Route path="test" element={<Test/>}/>
     </Routes>
     </div>
     </Router>
+    </CookiesProvider>
     
   );
 }

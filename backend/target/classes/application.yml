@@ -33,9 +33,15 @@ spring:
   main:
     allow-circular-references: true
 server:
-  port: '8080'
+  port: '5050'
   use-forward-header: true
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    health:
+      show-details: always
 jwt:
   secret: "14709625245cmprt3nttq7461f7o8s12rvpgpnsd7iappsgoogleusercontentcom"
 logging:
