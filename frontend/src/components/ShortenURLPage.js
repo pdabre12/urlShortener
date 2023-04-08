@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const ShortenURLPage = () =>  {
     const [shortUrl,setShortUrl] = useState("");
     const [longUrl,setLongUrl] = useState("");
+    const [errors,setErrors] = useState("");
     const navigate = useNavigate();
     
     const handleCopy = () => {
@@ -33,7 +34,7 @@ const ShortenURLPage = () =>  {
             
         }
         console.log(data);
-        const response = await axios.post(`${process.env.REACT_APP_SERVER}/api/v1/urls/`,
+        axios.post(`${process.env.REACT_APP_SERVER}/api/v1/urls/`,
              { ...data
             
             },{
@@ -41,8 +42,9 @@ const ShortenURLPage = () =>  {
               'Authorization': 'Bearer ' + getLocalStorageItemWithExpiry("token")
             }
           
-    });
-        if (response.status === 200 || response.status === 201){
+    })
+    .then(response=>{
+      if (response.status === 200 || response.status === 201){
             console.log(response.data)
             if (!response.data.shortUrl){
               window.alert("Request failed!Please try again..")
@@ -50,21 +52,23 @@ const ShortenURLPage = () =>  {
             setShortUrl(response.data.shortUrl);
 
         }
-        else{
-
-            console.log(response);
-        }
-    }
+    })
+    .catch(err=>{
+      console.log(err.response.data)
+      setErrors(err.response.data);
+    })
+  }
+        
   
     return (
-    <>
-    <button style={{marginLeft:"75%",marginTop:"5rem",backgroundColor:"green"}} className="btn btn-secondary"><Link to="/myurls" style={{textDecoration:"none",color:"whitesmoke"
+    <div className="container" style={{width:"75%"}}>
+    <button style={{marginLeft:"75%",marginTop:"15%",backgroundColor:"green"}} className="btn btn-secondary"><Link to="/myurls" style={{textDecoration:"none",color:"whitesmoke"
     }}>My URLs</Link></button>
-    <Card style={{marginLeft:"27.5rem",marginTop:"3rem",width:"35rem",height:"100%"}}>
-    <div className="Auth-form-container">
+    <Card style={{marginTop:"3%"}} >
+    <div >
       <form className="Auth-form" onSubmit={LongToShortURL}>
         <Card.Header style={{height:"3rem",textAlign:'center'}}>Shorten URL</Card.Header>
-        
+        <p style={{color:"red",marginLeft:"2rem"}}>{errors}</p>
           <div className="form-group mt-3" style={{margin:"1.5rem",marginTop:"3rem"}}>
             <label>Enter Long url</label>
             <input
@@ -73,6 +77,7 @@ const ShortenURLPage = () =>  {
               placeholder="Enter Long url"
               style={{height:"3rem"}}
               onChange={e => setLongUrl(e.target.value)}
+              required
             />
 <br></br>
 <div>
@@ -108,7 +113,7 @@ value={shortUrl               }
     {/* <Card style={{marginLeft:"27.5rem",marginTop:"5rem",width:"35rem",height:"2rem"}}>
        <p><b>Your shortened URL</b>: {shortUrl}</p>
     </Card> */}
-    </>
+    </div>
     )
 }
 export default ShortenURLPage

@@ -16,6 +16,7 @@ const RegistrationPage = () => {
   const navigate = useNavigate();
   const [ user, setUser ] = useState([]);
     const [accessToken,setAccessToken] = useState("");
+    const [errors,setErrors] = useState("");
     var uemail =""
   
     useEffect(() => {
@@ -97,8 +98,9 @@ const RegistrationPage = () => {
           navigate("/myurls")
         }
       } else {
-        console.log(response);
-        window.alert("Please try registring  again")
+        console.log(response.data);
+        setErrors(response.data)
+  
       }
       
     };
@@ -115,12 +117,12 @@ const RegistrationPage = () => {
 
 
     return (
-    <>
-    <Card style={{marginLeft:"27.5rem",marginTop:"5rem",width:"35rem",height:"35rem"}}>
+      <div class="container" style={{width:"75%",marginTop:"5%"}}>
+      <Card>
     <div className="Auth-form-container">
       <form className="Auth-form" onSubmit={checkLoginDetails}>
         <Card.Header style={{height:"3rem",textAlign:'center'}}>Sign Up</Card.Header>
-        
+        <p style={{color:"red",marginLeft:"2rem"}}>{errors}</p>
           <div className="form-group mt-3" style={{margin:"1.5rem"}}>
             <label>Email address</label>
             <input
@@ -150,11 +152,12 @@ const RegistrationPage = () => {
             <p className="forgot-password text-right mt-2" style={{textAlign:"center"}}> Already Registered?</p></a>
 
             </form>
-        <Card.Header style={{margin:"5rem",border:"0.01rem solid black",borderRadius:"0.5rem",backgroundColor:"white",marginTop:"2.5rem"}}>
-          <button onClick={()=>oauth2login()} style={{textDecoration:'none'}}>
+        <Card.Header style={{margin:"auto",border:"0.01rem solid black",marginBottom:"5%",borderRadius:"0.5rem",backgroundColor:"white",width:"75%"}}>
+          <button onClick={()=>oauth2login()} 
+          style={{border:"0px solid black",backgroundColor:"white",cursor:"pointer",width:"100%",height:"100%"}}>
                     <img src="https://raw.githubusercontent.com/callicoder/spring-boot-react-oauth2-social-login-demo/master/react-social/src/img/google-logo.png"
-                    style={{height: "1.5rem",marginLeft: "1rem"} } alt="Google" /> 
-                    <p style={{float:"right", marginRight:"6rem"}}>Log In with Google</p></button>
+                    style={{height: "2rem"} } alt="Google" /> 
+                    <p style={{marginLeft:"0.2%"}}>Log In with Google</p></button>
                    </Card.Header>
         
 
@@ -167,8 +170,7 @@ const RegistrationPage = () => {
                    </form> */}
       </div>
     </Card>
-    </>
-    )
+</div>    )
 }
 
 export default RegistrationPage

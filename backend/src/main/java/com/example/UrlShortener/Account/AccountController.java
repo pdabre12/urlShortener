@@ -6,6 +6,7 @@ import com.example.UrlShortener.config.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,13 +38,17 @@ public class AccountController {
                 return new ResponseEntity<>(accounts, HttpStatus.OK);
             }
             else{
-                throw new Exception("Do not have Accounts");
+                throw new IllegalArgumentException("Do not have Accounts");
             }
+        }
+        catch(IllegalArgumentException i){
+            return new ResponseEntity<>(i.getMessage(),HttpStatus.BAD_REQUEST);
+
         }
         catch(Exception e){
             return new
-                    ResponseEntity<>("Could not find any registered accounts",
-                    HttpStatus.BAD_REQUEST);
+                    ResponseEntity<>(e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -66,7 +71,7 @@ public class AccountController {
             }
         }
         catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -75,7 +80,7 @@ public class AccountController {
         try {
             Optional<Account> existing_account = accountService.getAccountByEmail(account.getEmail());
             if(!existing_account.isPresent()){
-                throw new  UsernameNotFoundException("Username not found");
+                throw new  UsernameNotFoundException("User Email not found");
 
             }
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -85,10 +90,18 @@ public class AccountController {
                 String jwtToken = jwtService.generateToken(existing_account.get());
                 return new ResponseEntity<>(jwtToken,HttpStatus.OK);
             }
-            throw new Exception();
+            else{
+                throw new BadCredentialsException("Password does not match!");
+            }
+        }
+        catch(UsernameNotFoundException u){
+            return new ResponseEntity<>(u.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+        catch(BadCredentialsException b){
+            return new ResponseEntity<>(b.getMessage(),HttpStatus.UNAUTHORIZED);
         }
         catch(Exception e){
-            return new ResponseEntity<>("Login unsuccessful",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
     }
 
@@ -96,13 +109,19 @@ public class AccountController {
     public ResponseEntity<?> getAccountByEmail(@PathVariable String email){
         try{
             Optional<Account> account = accountService.getAccountByEmail(email);
-            if(account.isPresent()){
-                return new ResponseEntity<>(account,HttpStatus.OK);
+
+            if(account.isPresent()) {
+                return new ResponseEntity<>(account, HttpStatus.OK);
             }
-            throw new Exception();
+            else{
+                throw new UsernameNotFoundException("User email not found!");
+            }
+        }
+        catch(UsernameNotFoundException u){
+            return  new ResponseEntity<>(u.getMessage(),HttpStatus.BAD_REQUEST);
         }
         catch(Exception e){
-            return new ResponseEntity<>("No email address registered",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -110,8 +129,6 @@ public class AccountController {
     public ResponseEntity<?> getJwtToken(@RequestBody Account account) {
         try {
             Optional<Account> existing_account = accountService.getAccountByEmail(account.getEmail());
-            System.out.println(existing_account);
-
 
             if (existing_account.isPresent()) {
                 String token = jwtService.generateToken(existing_account.get());
@@ -122,21 +139,11 @@ public class AccountController {
                 MyResponse myResponse = new MyResponse(token, account.getEmail());
                 return new ResponseEntity<>(myResponse, HttpStatus.CREATED);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return new ResponseEntity<>("Could not generate jwt token", HttpStatus.BAD_REQUEST);
 
         }
-    }
-
-    @GetMapping("/demo")
-    public ResponseEntity<?> demo() {
-        RestTemplate restTemplate = new RestTemplate();
-
-// Make a GET request with the URL of the API you want to call
-        String url = "http://localhost:5050/auth/get-authorized-user";
-        String responseBody = restTemplate.getForObject(url, String.class);
-        System.out.println(responseBody);
-        return new ResponseEntity<>(responseBody,HttpStatus.OK);
     }
 
 

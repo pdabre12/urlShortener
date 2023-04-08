@@ -54,8 +54,9 @@ const AllUrls =() => {
         <>
         <div className="container">
             <h3 className="p-3 text-center">My URLS - A list of all shortened URLs</h3>
-            {urls &&
-            <table className="table table-striped table-bordered">
+            {urls.length>0 ? (
+            <table className="table table-striped table-bordered" style={{tableLayout: "fixed",
+                width: "100%", borderCollapse: "collapse"}}>
                 <thead>
                     <tr>
                         <th>Email</th>
@@ -63,18 +64,18 @@ const AllUrls =() => {
                         <th>Short Url</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {urls && urls.map(url =>
-                        <tr key={url.id}>
+                <tbody >
+                    {urls&&urls.map(url =>
+                        <tr key={url.id} style={{wordWrap:"break-word"}}>
                             <td>{url.email}</td>
-                            <td>{url.longUrl}</td>
+                            <td >{url.longUrl}</td>
 
                             <td><a id={url.id} href={url.shortUrl}>{url.shortUrl}</a></td>
                         </tr>
                     )}
                 </tbody>
             </table>
-}
+            ):"No Urls found by the user!"}
         </div>
                     
         <button style={{float:"right",marginRight:"5rem",marginTop:"2rem",backgroundColor:"green"}} className="btn btn-secondary"><Link to="/urls" style={{textDecoration:"none",color:"whitesmoke"

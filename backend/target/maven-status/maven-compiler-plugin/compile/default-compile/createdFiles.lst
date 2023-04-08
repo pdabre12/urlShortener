@@ -1,6 +1,7 @@
 com/example/UrlShortener/User/UserController.class
 com/example/UrlShortener/Account/AccountRepository.class
 com/example/UrlShortener/Account/Account.class
+com/example/UrlShortener/Account/MyResponse.class
 com/example/UrlShortener/Url/Url.class
 com/example/UrlShortener/User/UserRepository.class
 com/example/UrlShortener/config/ApplicationConfig.class

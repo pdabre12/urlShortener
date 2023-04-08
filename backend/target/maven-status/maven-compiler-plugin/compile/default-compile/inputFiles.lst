@@ -4,6 +4,7 @@
 /Users/spartan/Downloads/Url-Shortener/backend/src/main/java/com/example/UrlShortener/Url/UrlRepository.java
 /Users/spartan/Downloads/Url-Shortener/backend/src/main/java/com/example/UrlShortener/Url/Url.java
 /Users/spartan/Downloads/Url-Shortener/backend/src/main/java/com/example/UrlShortener/config/ApplicationConfig.java
+/Users/spartan/Downloads/Url-Shortener/backend/src/main/java/com/example/UrlShortener/Account/MyResponse.java
 /Users/spartan/Downloads/Url-Shortener/backend/src/main/java/com/example/UrlShortener/config/JwtAuthenticationFilter.java
 /Users/spartan/Downloads/Url-Shortener/backend/src/main/java/com/example/UrlShortener/config/JwtService.java
 /Users/spartan/Downloads/Url-Shortener/backend/src/main/java/com/example/UrlShortener/Account/AccountRepository.java
