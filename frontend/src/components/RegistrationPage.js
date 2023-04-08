@@ -91,7 +91,7 @@ const RegistrationPage = () => {
       if (response.status === 200 || response.status === 201) {
         // TODO: Write code for successful login redirection
         console.log("Login Response", response.data);
-        setLocalStorageItemWithExpiry("JWT",response.data,86400)
+        setLocalStorageItemWithExpiry("token",response.data,86400)
         setLocalStorageItemWithExpiry("user",email,86400)
         setRole("USER")
         if (getLocalStorageItemWithExpiry("user")&&getLocalStorageItemWithExpiry('token')){

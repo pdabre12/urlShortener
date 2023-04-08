@@ -43,7 +43,7 @@ public class UrlController {
                 throw new IllegalArgumentException();
             }
             for (Url url:urls) {
-                url.setShortUrl("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080"+url.getShortUrl());
+                url.setShortUrl("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/"+url.getShortUrl());
             }
 
             return new ResponseEntity<>(urls,HttpStatus.OK);
@@ -62,14 +62,14 @@ public class UrlController {
             Optional<Url> existing_url = urlService.getExistingUrl(url.getLongUrl(),url.getEmail());
             if(existing_url.isPresent()){
                 existing_url.get()
-                        .setShortUrl("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080"+
+                        .setShortUrl("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/"+
                                 existing_url.get().getShortUrl());
                 System.out.println(existing_url.get());
                 return new ResponseEntity<>(existing_url,HttpStatus.OK);
             }
             Url created_url = urlService.createShortenedUrl(url);
             System.out.println(created_url);
-            created_url.setShortUrl("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080" + created_url.getShortUrl());
+            created_url.setShortUrl("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/" + created_url.getShortUrl());
             System.out.println(created_url);
             return new ResponseEntity<>(created_url,HttpStatus.CREATED);
         }
@@ -111,7 +111,7 @@ public class UrlController {
             Optional<List<Url>> urls = urlService.getUrlsByEmail(email);
             if (urls.isPresent() && (urls.get().size() != 0)) {
                 for (Url url : urls.get()) {
-                    url.setShortUrl("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080" + url.getShortUrl());
+                    url.setShortUrl("http://ec2-18-236-157-38.us-west-2.compute.amazonaws.com:8080/" + url.getShortUrl());
                 }
                 return new ResponseEntity<>(urls, HttpStatus.OK);
             } else if (urls.get().size() == 0) {
