@@ -72,8 +72,8 @@ const ShortenURLPage = () =>  {
           <div className="form-group mt-3" style={{margin:"1.5rem",marginTop:"3rem"}}>
             <label>Enter Long url</label>
             <input
-              type="text"
-              className="form-control mt-1"
+type="url"              className="form-control mt-1"
+
               placeholder="Enter Long url"
               style={{height:"3rem"}}
               onChange={e => setLongUrl(e.target.value)}
