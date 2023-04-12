@@ -35,6 +35,7 @@ export default function LoginPage() {
                       const data = {
                         email:uemail,
                         password:"",
+                        role:"USER"
                     }
                     return data
                       
